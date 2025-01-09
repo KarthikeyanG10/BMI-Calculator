@@ -1,0 +1,82 @@
+import { useState } from 'react';
+import './bmi.css';
+
+
+function Bmi(){
+    const[height,setheight]=useState("");
+    const[weight,setweight]=useState("");
+    const[bmi,setbmi]=useState(null);
+    const[bmistatus,setbmistatus]=useState("");
+    const[error,seterror]=useState("");
+    const Calculate=()=>{
+        const validateheight=/^\d+$/.test(height);
+        const validateweight=/^\d+$/.test(weight);
+        if(validateheight && validateweight){
+            const heightcal=height/100;
+            const bmivalue=weight/(heightcal*heightcal);
+            setbmi(bmivalue.toFixed(2));
+            if(bmivalue<18.5){
+                setbmistatus("UnderWeight");
+            }
+            else if(bmivalue >= 18.5 && bmivalue<24.9){
+                setbmistatus("NormalWeight")
+            }
+            else if(bmivalue >=25 && bmivalue<29.9){
+                setbmistatus("OverWeight");
+            }
+            else{
+                setbmistatus("Obese");
+            }
+            seterror("");
+        }
+        else{
+            setbmi(null);
+            setbmistatus("");
+            seterror("Please Enter Valid Numeric value for Height and Weight.");
+        }
+    }
+        const allClear=()=>{
+            setheight("");
+            setweight("");
+            setbmi(null);
+            setbmistatus("");
+        } 
+
+
+    const handleHeight=(e)=>{
+        setheight(e.target.value);
+    }
+    const handleweight=(e)=>{
+        setweight(e.target.value);
+    }
+    return(
+        <>
+        <div id="container">
+            <div id='box'></div>
+            <div className="input">
+                <h1>BMI CALUCULATOR</h1>
+            </div>
+            <div className="box1">
+                <p id='error'>{error}</p>
+                <label>Height(cm):</label>
+                <input type="text" value={height} onChange={handleHeight} placeholder='Enter Height'/>
+            </div>
+            <div className="box2">
+                <label>Weight(kg):</label>
+                <input type="text" value={weight} onChange={handleweight} placeholder='Enter Weight'/>
+            </div>
+            <div id="whole">
+                <button id="button" onClick={Calculate}><h3>Calculate BMI</h3></button>
+                <button id='clear' onClick={allClear}><h3>Clear</h3></button>
+            </div>
+            {bmi!==null && (
+                <div className="para">
+                <p>Your BMI is: {bmi}</p>
+                <p>Status: {bmistatus}</p>
+                </div>
+            )}
+        </div>
+        </>
+    )
+}
+export default Bmi;
